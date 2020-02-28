@@ -1,14 +1,12 @@
 <?php
 
-//use App\Database\Database;
+//error_reporting(0);
 
 require_once 'autoload.php';
 
-// include \App\Database\Database::class;
-
-$app = new App();
-
-$app->init();
+//$app = new App();
+//
+//$app->init();
 
 //echo 'hallo';
 //echo "\n";

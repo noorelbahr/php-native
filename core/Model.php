@@ -30,6 +30,20 @@ class Model extends Database
     }
 
     /**
+     * Find by
+     * - - -
+     * @param $attribute
+     * @param $value
+     * @return mixed
+     */
+    public function findBy($attribute, $value)
+    {
+        $sql    = 'SELECT * FROM ' . $this->table . ' WHERE ? = ? LIMIT 1';
+        $query  = $this->prepareExecute($sql, [$attribute, $value]);
+        return $query->fetch();
+    }
+
+    /**
      * Create data
      * - - -
      * @param array $attributes
