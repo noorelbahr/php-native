@@ -2,10 +2,12 @@
 
 class App extends Controller
 {
-    public function init()
+    /**
+     * Run app
+     */
+    public function run()
     {
         try {
-
             Route::exec();
 
         } catch (Exception $e) {

@@ -31,7 +31,8 @@ class Migration extends Database
                 `account_number` varchar(30) NOT NULL,
                 `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                UNIQUE KEY unique_email (email)
             ) ENGINE=InnoDB';
         $this->prepareExecute($sql);
     }
@@ -73,6 +74,9 @@ class Migration extends Database
                 `remark` text NULL,
                 `receipt` varchar(255) NULL,
                 `time_served` varchar(30) NULL,
+                `server` varchar(50) NOT NULL,
+                `reference_id` varchar(100) NULL,
+                `status` varchar(30) NOT NULL,
                 `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 PRIMARY KEY (`id`)

@@ -1,6 +1,6 @@
 <?php
 
-class Seeder
+class Seeder extends Database
 {
     /**
      * Seed all data
@@ -16,25 +16,16 @@ class Seeder
      */
     private function seedUserData()
     {
-        $user = new User();
-        $user->create([
-            [
-                'fullname'  => 'John Doe',
-                'email'     => 'john@gmail.com',
-                'gender'    => 'male',
-                'password'  => md5('john123'),
-                'balance'   => 500000000,
-                'bank_code' => 'bni',
-                'account_number' => '1234567890'
-            ], [
-                'fullname'  => 'Jane Doe',
-                'email'     => 'jane@gmail.com',
-                'gender'    => 'female',
-                'password'  => md5('jane123'),
-                'balance'   => 50000,
-                'bank_code' => 'bni',
-                'account_number' => '0987654321'
-            ]
+        $sql = '
+            INSERT INTO users (fullname, email, gender, password, balance, bank_code, account_number)
+            VALUES (?, ?, ?, ?, ?, ?, ?)';
+
+        $this->prepareExecute($sql, [
+            'John Doe', 'john@gmail.com', 'male', md5('john123'), 500000000, 'bni', '123123123'
+        ]);
+
+        $this->prepareExecute($sql, [
+            'Jane Doe', 'jane@gmail.com', 'female', md5('jane123'), 50000, 'bni', '321321321'
         ]);
     }
 }

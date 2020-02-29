@@ -12,8 +12,8 @@ class Controller
      */
     public function success($data, $code = 200, $isMessage = false)
     {
-        $data = $isMessage ? $data : ['data' => $data];
-        $response = new Response($data, $code ? : 200);
+        $data       = $isMessage ? $data : ['data' => $data];
+        $response   = new Response($data, $code ? : 200);
         return $response->json();
     }
 
@@ -26,8 +26,9 @@ class Controller
      */
     public function error($message, $code = 500)
     {
-        $code = $code && is_numeric($code) ? $code : 500;
-        $response = new Response($message, $code);
+        $code       = $code && is_numeric($code) ? $code : 500;
+        $message    = is_array($message) ? json_encode($message) : $message;
+        $response   = new Response($message, $code);
         return $response->json();
     }
 

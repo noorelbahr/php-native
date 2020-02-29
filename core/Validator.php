@@ -22,11 +22,8 @@ class Validator
     {
         $errors = [];
         foreach ($this->rules as $key => $rule) {
-            echo $key . "\n";
-            die($rule);
             switch ($rule) {
                 case 'required':
-                    echo $this->attributes[$key] . "\n";
                     if (!isset($this->attributes[$key]) || !$this->attributes[$key])
                         $errors[$key] = ucfirst($key) . ' field is required.';
                     break;
@@ -35,7 +32,6 @@ class Validator
             }
         }
 
-        print_r($errors);
         if (count($errors) > 0) {
             $this->errors = $errors;
             return false;
@@ -54,9 +50,17 @@ class Validator
 
     public function getError($messageOnly = false)
     {
-        if ($messageOnly)
-            return isset($this->errors[0]) ? array_values($this->errors[0]) : null;
+        $keys = array_keys($this->errors);
+        $msgs = array_values($this->errors);
 
-        return isset($this->errors[0]) ? $this->errors[0] : null;
+        if (!isset($msgs[0]))
+            return null;
+
+        if ($messageOnly)
+            return $msgs[0];
+
+        return [
+            $keys[0] => $msgs[0]
+        ];
     }
 }

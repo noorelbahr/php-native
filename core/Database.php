@@ -2,21 +2,21 @@
 
 class Database
 {
-    private $servername;
-    private $username;
-    private $password;
-    private $database;
-    private $charset;
+    protected $servername;
+    protected $username;
+    protected $password;
+    protected $database;
+    protected $charset;
 
     /**
      * Database constructor.
      */
     public function __construct()
     {
-        $this->servername = 'localhost';
-        $this->username = 'root';
-        $this->password = '';
-        $this->database = 'native';
+        $this->servername = DB_SERVER;
+        $this->username = DB_USER;
+        $this->password = DB_PASSWORD;
+        $this->database = DB_NAME;
         $this->charset = 'utf8mb4';
     }
 

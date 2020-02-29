@@ -108,7 +108,12 @@ class Route
             $method = $actionArr[1];
 
             // Get params
-            $params = [new Request()];
+            if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT'])) {
+                $params = [new Request()];
+            } else {
+                $params = [];
+            }
+
             $uri = self::getUri();
             $uriArr = explode('/', $uri);
             $route = trim($route, '/');

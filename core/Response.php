@@ -26,6 +26,6 @@ class Response
     {
         header('Content-Type: application/json');
         http_response_code($this->httpCode);
-        return json_encode($this->body, JSON_PRETTY_PRINT);
+        return json_encode($this->body, JSON_NUMERIC_CHECK);
     }
 }

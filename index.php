@@ -4,9 +4,3 @@
 
 require_once 'autoload.php';
 
-//$app = new App();
-//
-//$app->init();
-
-//echo 'hallo';
-//echo "\n";

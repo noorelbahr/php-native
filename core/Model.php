@@ -17,7 +17,7 @@ class Model extends Database
     }
 
     /**
-     * Find by id
+     * Find first data by id
      * - - -
      * @param $id
      * @return mixed
@@ -30,7 +30,7 @@ class Model extends Database
     }
 
     /**
-     * Find by
+     * Find first data by ...
      * - - -
      * @param $attribute
      * @param $value
@@ -38,9 +38,27 @@ class Model extends Database
      */
     public function findBy($attribute, $value)
     {
-        $sql    = 'SELECT * FROM ' . $this->table . ' WHERE ? = ? LIMIT 1';
-        $query  = $this->prepareExecute($sql, [$attribute, $value]);
+        $sql    = 'SELECT * FROM ' . $this->table . ' WHERE ' . $attribute . ' = ? LIMIT 1';
+        $query  = $this->prepareExecute($sql, [$value]);
         return $query->fetch();
+    }
+
+    /**
+     * Find data where ...
+     * - - -
+     * @param $attributes
+     * @return mixed
+     */
+    public function findWhere($attributes, $getAll = false)
+    {
+        $whereConditions = [];
+        foreach ($attributes as $key => $attr) {
+            $whereConditions[] = $key . ' = ?';
+        }
+
+        $sql    = 'SELECT * FROM ' . $this->table . ' WHERE ' . implode(' AND ', $whereConditions);
+        $query  = $this->prepareExecute($sql, array_values($attributes));
+        return $getAll ? $query->fetchAll() : $query->fetch();
     }
 
     /**
