@@ -121,8 +121,6 @@ class WithdrawalController extends Controller
     {
         // Check status to SBFlip
         $sbfResponse = $this->SBFlipLibrary->checkStatus($withdrawal);
-//        print_r($sbfResponse);
-//        die();
         if ($sbfResponse) {
             $status = strtolower($sbfResponse->status);
             switch ($status) {
