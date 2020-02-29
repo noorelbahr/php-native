@@ -38,7 +38,7 @@ Run command below to make migration tables and seed default data :
 php init.php
 ```
 
-##### Run Our Project
+### Run Our Project
 To run the project, move the project directory (`php-native`) to your local `xampp/htdocs` folder.
 
 So we can access our project with url http://localhost/php-native
