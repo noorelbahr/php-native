@@ -5,6 +5,7 @@ class WithdrawalController extends Controller
     private $withdrawalModel;
     private $userModel;
     private $balanceHistoryModel;
+    private $SBFlipLibrary;
 
     /**
      * WithdrawalController constructor.
@@ -14,6 +15,7 @@ class WithdrawalController extends Controller
         $this->withdrawalModel = new Withdrawal();
         $this->userModel = new User();
         $this->balanceHistoryModel = new BalanceHistory();
+        $this->SBFlipLibrary = new SlightlyBigFlip();
     }
 
     /**
@@ -28,6 +30,12 @@ class WithdrawalController extends Controller
             $withdrawal = $this->withdrawalModel->find($id);
             if (!$withdrawal)
                 throw new Exception('Data not found.');
+
+            // Update data
+            $this->updateData($withdrawal);
+
+            // Get latest data
+            $withdrawal = $this->withdrawalModel->find($id);
 
             echo $this->success($withdrawal);
 
@@ -88,22 +96,69 @@ class WithdrawalController extends Controller
                 'balance' => ($currentBalance - $requestedAmount)
             ]);
 
-            // Create balance history
-            $this->balanceHistoryModel->create([
-                'user_id'       => $user->id,
-                'reference_id'  => $withdrawal->id,
-                'type'          => BalanceHistory::WITHDRAWAL,
-                'amount'        => ($requestedAmount * -1)
-            ]);
-
             // Hit to SBFlip
-            $SBFlip = new SlightlyBigFlip();
-            $SBFlip->requestDisbursement($requestedAmount, $withdrawal->bank_code, $withdrawal->account_number, $withdrawal->remark);
+            $sbfResponse = $this->SBFlipLibrary->requestDisbursement($withdrawal);
+            if ($sbfResponse) {
+                $this->withdrawalModel->update($withdrawal->id, [
+                    'reference_id' => $sbfResponse->id,
+                    'fee' => $sbfResponse->fee
+                ]);
+            }
 
             echo $this->success($withdrawal);
 
         } catch (Exception $e) {
             echo $this->error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Update effected data
+     * - - -
+     * @param $withdrawal
+     */
+    private function updateData($withdrawal)
+    {
+        // Check status to SBFlip
+        $sbfResponse = $this->SBFlipLibrary->checkStatus($withdrawal);
+//        print_r($sbfResponse);
+//        die();
+        if ($sbfResponse) {
+            $status = strtolower($sbfResponse->status);
+            switch ($status) {
+                case 'success':
+                    // Update withdrawal data
+                    $this->withdrawalModel->update($withdrawal->id, [
+                        'status'        => $status,
+                        'time_served'   => $sbfResponse->time_served,
+                        'receipt'       => $sbfResponse->receipt,
+                        'amount'        => $sbfResponse->amount,
+                        'fee'           => $sbfResponse->fee
+                    ]);
+
+                    // Create balance history
+                    $this->balanceHistoryModel->create([
+                        'user_id'       => $withdrawal->user_id,
+                        'reference_id'  => $withdrawal->id,
+                        'type'          => BalanceHistory::WITHDRAWAL,
+                        'amount'        => ($withdrawal->amount * -1)
+                    ]);
+                    break;
+                case 'failed':
+                    // Update withdrawal data
+                    $this->withdrawalModel->update($withdrawal->id, [
+                        'status'        => $status,
+                        'time_served'   => $sbfResponse->time_served
+                    ]);
+
+                    // Update user balance
+                    $user = $this->userModel->find($withdrawal->user_id);
+                    $this->userModel->update($user->id, [
+                        'balance' => (int) $user->balance + (int) $withdrawal->amount
+                    ]);
+                    break;
+                default: break;
+            }
         }
     }
 

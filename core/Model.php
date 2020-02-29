@@ -47,6 +47,7 @@ class Model extends Database
      * Find data where ...
      * - - -
      * @param $attributes
+     * @param bool $getAll
      * @return mixed
      */
     public function findWhere($attributes, $getAll = false)
@@ -56,7 +57,10 @@ class Model extends Database
             $whereConditions[] = $key . ' = ?';
         }
 
-        $sql    = 'SELECT * FROM ' . $this->table . ' WHERE ' . implode(' AND ', $whereConditions);
+        $sql = 'SELECT * FROM ' . $this->table . ' WHERE ' . implode(' AND ', $whereConditions);
+        if (!$getAll)
+            $sql .= ' LIMIT 1';
+
         $query  = $this->prepareExecute($sql, array_values($attributes));
         return $getAll ? $query->fetchAll() : $query->fetch();
     }
@@ -65,6 +69,8 @@ class Model extends Database
      * Create data
      * - - -
      * @param array $attributes
+     * @param bool $returnCreatedData
+     * @param array $returnConditions
      * @return int
      */
     public function create(array $attributes)

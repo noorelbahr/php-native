@@ -3,7 +3,6 @@
 class UserController extends Controller
 {
     private $userModel;
-    private $balanceHistoryModel;
 
     /**
      * UserController constructor.
@@ -11,7 +10,6 @@ class UserController extends Controller
     public function __construct()
     {
         $this->userModel = new User();
-        $this->balanceHistoryModel = new BalanceHistory();
     }
 
     /**
@@ -183,11 +181,39 @@ class UserController extends Controller
             if (!$user)
                 throw new Exception('User not found.');
 
-            $balanceHistories = $this->balanceHistoryModel->findWhere([
+            // Get data
+            $balanceHistoryModel = new BalanceHistory();
+            $balanceHistories = $balanceHistoryModel->findWhere([
                 'user_id' => $user->id
             ], true);
 
             echo $this->success($balanceHistories);
+
+        } catch (Exception $e) {
+            echo $this->error($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Get user's withdrawal histories
+     * - - -
+     * @param $id
+     */
+    public function withdrawalHistory($id)
+    {
+        try {
+            // Check user data
+            $user = $this->userModel->find($id);
+            if (!$user)
+                throw new Exception('User not found.');
+
+            // Get data
+            $withdrawalModel = new Withdrawal();
+            $withdrawals = $withdrawalModel->findWhere([
+                'user_id' => $user->id
+            ], true);
+
+            echo $this->success($withdrawals);
 
         } catch (Exception $e) {
             echo $this->error($e->getMessage(), $e->getCode());

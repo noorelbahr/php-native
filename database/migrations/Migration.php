@@ -94,7 +94,9 @@ class Migration extends Database
             CREATE TABLE IF NOT EXISTS `third_party_logs` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `reference_id` int(11) NOT NULL,
-                `type` varchar(10) NOT NULL,
+                `server` varchar(50) NOT NULL,
+                `type` varchar(50) NOT NULL,
+                `time` varchar(30) NOT NULL,
                 `payload` text NULL,
                 `response` text NULL,
                 `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
