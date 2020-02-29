@@ -14,6 +14,12 @@ Here we assume that we are using `XAMPP` and our `Apache` and `MySQL` server are
 
 ---
 
+Run command below to get a copy for our `.htaccess` file :
+
+```
+cp htaccess.txt .htaccess
+```
+
 Open `config/app.php` file and edit as needed if you have different configuration:
 ```
 define('DB_SERVER', 'localhost');
