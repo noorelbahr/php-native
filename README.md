@@ -14,7 +14,7 @@ Here we assume that we are using `XAMPP` and our `Apache` and `MySQL` server are
 
 ---
 
-Open `config/app.php` file and edit as below:
+Open `config/app.php` file and edit as needed if you have different configuration:
 ```
 define('DB_SERVER', 'localhost');
 define('DB_USER', 'root');
