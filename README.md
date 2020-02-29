@@ -37,6 +37,9 @@ To run the project, move the project directory (`php-native`) to your local `xam
 
 So we can access our project with url http://localhost/php-native
 
+##### Don't forget to activate PHP cURL Extension!
+In `XAMPP`, open `php.ini` file and make sure `extension=php_curl.dll` line is uncommented or ignored.
+
 
 ## Testing Our API
 To test our API, click button bellow : 
